@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projeto LabScore</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Dados do Aluno</h1>
+    </header>
+
+    <main>
+      <div class="content">
+        <section class="info">
+          <h2>Informações do Aluno</h2>
+          <ul>
+            <li>
+              <strong>Nome: </strong>
+              <span id="nome"></span>
+            </li>
+            <li>
+              <strong>Idade: </strong>
+              <span id="idade"></span>
+            </li>
+            <li>
+              <strong>Série: </strong>
+              <span id="serie"></span>
+            </li>
+            <li>
+              <strong>Escola: </strong>
+              <span id="escola"></span>
+            </li>
+            <li>
+              <strong>Matéria Favorita: </strong>
+              <span id="materia"></span>
+            </li>
+          </ul>
+        </section>
+
+        <section class="notas">
+          <div class="top">
+            <h2>Notas das Matérias</h2>
+            <button id="bt-notas">Adicionar Linha</button>
+          </div>
+          <table id="tabelaMaterias">
+            <thead>
+              <tr>
+                <th>Matéria</th>
+                <th>Nota 1</th>
+                <th>Nota 2</th>
+                <th>Nota 3</th>
+                <th>Nota 4</th>
+                <th>Média</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <div class="media">
+            <h3>Média Geral do Aluno</h3>
+            <p>A média geral do aluno é <span id="mediaGeral"></span></p>
+          </div>
+
+          <div class="media">
+            <h3>Maior Média entre as Matérias</h3>
+            <p>
+              A maior média entre as matérias é <span id="maiorMedia"></span>
+            </p>
+          </div>
+        </section>
+
+        <section class="alunos">
+          <h2>Lista de Alunos</h2>
+          <ul>
+            <li>João da Silva</li>
+            <li>Maria Oliveira</li>
+            <li>José Santos</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
