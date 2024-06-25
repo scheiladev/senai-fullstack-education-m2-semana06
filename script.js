@@ -109,7 +109,9 @@ function encontrarMaiorNumero(numeros) {
 
 /* LabScore pt.2 - Exercício 4 */
 let botaoMaterias = document.querySelector("#bt-notas");
-botaoMaterias.addEventListener("click", notasMateria);
+if (botaoMaterias) {
+  botaoMaterias.addEventListener("click", notasMateria);
+}
 
 function adicionaMateria(dadosMateria, media) {
   let tbody = document.querySelector("#tabelaMaterias tbody");
@@ -125,4 +127,54 @@ function adicionaMateria(dadosMateria, media) {
   `;
 }
 
-entrevistaAluno();
+/* LabScore pt.3 - Exercício 2 */
+let botaoCep = document.querySelector("#viacep");
+if (botaoCep) {
+  botaoCep.addEventListener("click", buscarCep);
+}
+
+let cep = document.getElementById("cep");
+let rua = document.getElementById("rua");
+let cidade = document.getElementById("cidade");
+let estado = document.getElementById("estado");
+
+function limpaCampos() {
+  rua.value = "";
+  cidade.value = "";
+  estado.value = "";
+  cep.value = "";
+}
+
+async function buscarCep(event) {
+  event.preventDefault();
+  let url = `https://viacep.com.br/ws/${cep.value}/json/`;
+
+  try {
+    if (cep.value.length != 8) {
+      limpaCampos();
+      throw new Error("Cep precisa ter 8 digitos numéricos");
+    }
+
+    let response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://127.0.0.1:5500",
+      },
+    });
+
+    let data = await response.json();
+
+    if (!data.erro) {
+      rua.value = data.logradouro;
+      cidade.value = data.localidade;
+      estado.value = data.uf;
+    } else {
+      limpaCampos();
+      throw new Error("Cep inválido");
+    }
+  } catch (error) {
+    alert(error);
+  }
+}

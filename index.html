@@ -20,30 +20,33 @@
     <main>
       <div class="content">
         <section class="info">
-          <form action="">
+          <form action="" onsubmit="buscarCep()">
             <div>
               <label for="nome">Nome: </label>
-              <input type="text" name="nome" id="nome" />
+              <input type="text" name="nome" id="nome" required />
             </div>
             <div>
               <label for="idade">Idade: </label>
-              <input type="text" name="idade" id="idade" />
+              <input type="text" name="idade" id="idade" required />
             </div>
             <div>
               <label for="serie">Série: </label>
-              <input type="text" name="serie" id="serie" />
+              <input type="text" name="serie" id="serie" required />
             </div>
             <div>
               <label for="escola">Escola: </label>
-              <input type="text" name="escola" id="escola" />
+              <input type="text" name="escola" id="escola" required />
             </div>
             <div>
               <label for="materia">Matéria Favorita: </label>
-              <input type="text" name="materia" id="materia" />
+              <input type="text" name="materia" id="materia" required />
             </div>
-            <div>
+            <div class="busca_cep">
               <label for="cep">CEP</label>
-              <input type="text" name="cep" id="cep" />
+              <input type="number" name="cep" id="cep" required />
+              <button id="viacep">
+                <img src="icon-pesquisar.svg" alt="pesquisar" />
+              </button>
             </div>
             <div>
               <label for="rua">Rua</label>
