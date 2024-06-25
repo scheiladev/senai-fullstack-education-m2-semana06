@@ -1,7 +1,95 @@
-/* LabScore pt.1 - Exercício 1 */
-let listaNotas = [8, 10, 7, 5];
+/* Variáveis */
+let formNome = document.getElementById("form-nome");
+let formIdade = document.getElementById("form-idade");
+let formSerie = document.getElementById("form-serie");
+let formEscola = document.getElementById("form-escola");
+let formMateria = document.getElementById("form-materia");
+let formCep = document.getElementById("form-cep");
+let formRua = document.getElementById("form-rua");
+let formCidade = document.getElementById("form-cidade");
+let formEstado = document.getElementById("form-estado");
 
-function calculaMedia(notas) {
+let nome = document.getElementById("nome");
+let idade = document.getElementById("idade");
+let serie = document.getElementById("serie");
+let escola = document.getElementById("escola");
+let materia = document.getElementById("materia");
+
+let listaNotas = [];
+let listaAlunos = [];
+let medias = [];
+let mediaNotas = 0;
+
+let botaoCep = document.querySelector("#viacep");
+if (botaoCep) {
+  botaoCep.addEventListener("click", buscarCep);
+}
+
+let botaoSalvarDados = document.querySelector("#salvarDados");
+if (botaoSalvarDados) {
+  botaoSalvarDados.addEventListener("click", gravarDadosAluno);
+}
+
+let botaoMaterias = document.querySelector("#bt-notas");
+if (botaoMaterias) {
+  botaoMaterias.addEventListener("click", adicionarMateria);
+}
+
+function gravarDadosAluno(event) {
+  event.preventDefault();
+
+  if (
+    !formNome.value ||
+    !formIdade.value ||
+    !formSerie.value ||
+    !formEscola.value ||
+    !formMateria.value ||
+    !formCep.value
+  ) {
+    alert("Todos os dados são obrigatórios");
+    return;
+  }
+
+  let confirmarDados = `Você confirma os dados inseridos?
+    Nome do aluno: ${formNome.value}
+    Idade do aluno: ${formIdade.value}
+    Série do aluno: ${formSerie.value}
+    Nome da escola: ${formEscola.value}
+    Matéria favorita: ${formMateria.value}
+    CEP: ${formCep.value}
+    Rua: ${formRua.value}
+    Cidade: ${formCidade.value}
+    Estado: ${formEstado.value}
+  `;
+
+  let confirmacao = window.confirm(confirmarDados);
+
+  if (!confirmacao) {
+    limparDados();
+    limparEndereco();
+    return window.alert("Os dados não foram confirmados.");
+  }
+
+  let aluno = {};
+
+  aluno.nome = formNome.value;
+  aluno.idade = formIdade.value;
+  aluno.serie = formSerie.value;
+  aluno.escola = formEscola.value;
+  aluno.materia = formMateria.value;
+  aluno.cep = formCep.value;
+  aluno.rua = formRua.value;
+  aluno.cidade = formCidade.value;
+  aluno.estado = formEstado.value;
+
+  const dadosJSON = JSON.stringify(aluno);
+
+  localStorage.setItem("dadosAluno", dadosJSON);
+
+  window.location.href = "http://127.0.0.1:5500/home.html";
+}
+
+function calcularMedia(notas) {
   let soma = 0;
   for (let i = 0; i < notas.length; i++) {
     soma += notas[i];
@@ -10,17 +98,13 @@ function calculaMedia(notas) {
   return media;
 }
 
-let mediaNotas = calculaMedia(listaNotas);
+mediaNotas = calcularMedia(listaNotas);
 
-/* LabScore pt.1 - Exercício 2 */
 function resultadoFinal(media) {
   return media >= 7
     ? `<p>Média: <strong>${media}</strong>.<br> Parabéns, você passou na média!</p>`
     : `<p>Média: <strong>${media}</strong>.<br> Infelizmente você está de recuperação.</p>`;
 }
-
-/* LabScore pt.1 - Exercício 3 */
-let listaAlunos = ["Pedro", "Maria", "João", "Paula"];
 
 function imprimirNomes(nomes) {
   return nomes.forEach((aluno) => {
@@ -28,7 +112,6 @@ function imprimirNomes(nomes) {
   });
 }
 
-/* LabScore pt.1 - Exercício 4 */
 function tabuada(numero) {
   for (let i = 0; i <= 10; i++) {
     let resultado = numero * i;
@@ -36,38 +119,7 @@ function tabuada(numero) {
   }
 }
 
-/* LabScore pt.1 - Exercício 5 */
-function entrevistaAluno() {
-  let nome = window.prompt("Qual o nome do aluno?");
-  let idade = window.prompt("Qual a idade do aluno?");
-  let serie = window.prompt("Qual a série do aluno?");
-  let escola = window.prompt("Qual o nome da escola?");
-  let materia = window.prompt("Qual a sua matéria favorita?");
-
-  let dadosAluno = `Você confirma os dados inseridos?
-    Nome do aluno: ${nome}
-    Idade do aluno: ${idade}
-    Série do aluno: ${serie}
-    Nome da escola: ${escola}
-    Matéria favorita: ${materia}`;
-
-  let confirmacao = window.confirm(dadosAluno);
-
-  if (confirmacao) {
-    document.getElementById("nome").innerText = nome;
-    document.getElementById("idade").innerText = idade;
-    document.getElementById("serie").innerText = serie;
-    document.getElementById("escola").innerText = escola;
-    document.getElementById("materia").innerText = materia;
-  } else {
-    return window.alert("Os dados não foram confirmados.");
-  }
-}
-
-/* LabScore pt.1 - Exercício 6 */
-let medias = [];
-
-function notasMateria() {
+function adicionarMateria() {
   let materia = window.prompt("Qual o nome da matéria?");
   let notas = [];
   let i = 0;
@@ -82,19 +134,18 @@ function notasMateria() {
     notas: notas,
   };
 
-  let media = calculaMedia(dadosMateria.notas);
+  let media = calcularMedia(dadosMateria.notas);
   medias.push(media);
 
-  adicionaMateria(dadosMateria, media);
+  adicionarLinhaMateria(dadosMateria, media);
 
-  let mediaGeral = calculaMedia(medias);
+  let mediaGeral = calcularMedia(medias);
   document.querySelector("#mediaGeral").innerText = mediaGeral;
 
   let maiorMedia = encontrarMaiorNumero(medias);
   document.querySelector("#maiorMedia").innerHTML = maiorMedia;
 }
 
-/* LabScore pt.1 - Exercício 7 */
 function encontrarMaiorNumero(numeros) {
   let maiorNumero = numeros[0];
 
@@ -107,13 +158,7 @@ function encontrarMaiorNumero(numeros) {
   return maiorNumero;
 }
 
-/* LabScore pt.2 - Exercício 4 */
-let botaoMaterias = document.querySelector("#bt-notas");
-if (botaoMaterias) {
-  botaoMaterias.addEventListener("click", notasMateria);
-}
-
-function adicionaMateria(dadosMateria, media) {
+function adicionarLinhaMateria(dadosMateria, media) {
   let tbody = document.querySelector("#tabelaMaterias tbody");
   tbody.innerHTML += `
     <tr>
@@ -127,31 +172,28 @@ function adicionaMateria(dadosMateria, media) {
   `;
 }
 
-/* LabScore pt.3 - Exercício 2 */
-let botaoCep = document.querySelector("#viacep");
-if (botaoCep) {
-  botaoCep.addEventListener("click", buscarCep);
+function limparDados() {
+  formNome.value = "";
+  formIdade.value = "";
+  formSerie.value = "";
+  formEscola.value = "";
+  formMateria.value = "";
 }
 
-let cep = document.getElementById("cep");
-let rua = document.getElementById("rua");
-let cidade = document.getElementById("cidade");
-let estado = document.getElementById("estado");
-
-function limpaCampos() {
-  rua.value = "";
-  cidade.value = "";
-  estado.value = "";
-  cep.value = "";
+function limparEndereco() {
+  formRua.value = "";
+  formCidade.value = "";
+  formEstado.value = "";
+  formCep.value = "";
 }
 
 async function buscarCep(event) {
   event.preventDefault();
-  let url = `https://viacep.com.br/ws/${cep.value}/json/`;
+  let url = `https://viacep.com.br/ws/${formCep.value}/json/`;
 
   try {
-    if (cep.value.length != 8) {
-      limpaCampos();
+    if (formCep.value.length != 8) {
+      limparEndereco();
       throw new Error("Cep precisa ter 8 digitos numéricos");
     }
 
@@ -167,11 +209,11 @@ async function buscarCep(event) {
     let data = await response.json();
 
     if (!data.erro) {
-      rua.value = data.logradouro;
-      cidade.value = data.localidade;
-      estado.value = data.uf;
+      formRua.value = data.logradouro;
+      formCidade.value = data.localidade;
+      formEstado.value = data.uf;
     } else {
-      limpaCampos();
+      limparEndereco();
       throw new Error("Cep inválido");
     }
   } catch (error) {
