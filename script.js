@@ -35,6 +35,23 @@ if (botaoMaterias) {
   botaoMaterias.addEventListener("click", adicionarMateria);
 }
 
+window.addEventListener("load", (event) => {
+  if (window.location.pathname == "/home.html") {
+    const alunoJSON = localStorage.getItem("dadosAluno");
+    console.log(alunoJSON);
+
+    if (alunoJSON) {
+      const aluno = JSON.parse(alunoJSON);
+
+      nome.innerText = aluno.nome;
+      idade.innerText = aluno.idade;
+      serie.innerText = aluno.serie;
+      escola.innerText = aluno.escola;
+      materia.innerText = aluno.materia;
+    }
+  }
+});
+
 function gravarDadosAluno(event) {
   event.preventDefault();
 
