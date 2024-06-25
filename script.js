@@ -47,6 +47,7 @@ window.addEventListener("load", (event) => {
     carregarDadosAluno();
     carregarMateriasAluno();
     calcularMediaGeral(mediaMaterias);
+    carregarListaAlunos();
 
     let maiorMedia = encontrarMaiorNumero(mediaMaterias);
     document.querySelector("#maiorMedia").innerHTML = maiorMedia;
@@ -55,7 +56,6 @@ window.addEventListener("load", (event) => {
 
 function carregarDadosAluno() {
   const alunoJSON = localStorage.getItem("dadosAluno");
-  console.log(alunoJSON);
 
   if (alunoJSON) {
     const aluno = JSON.parse(alunoJSON);
@@ -275,6 +275,22 @@ async function buscarCep(event) {
       limparEndereco();
       throw new Error("Cep inválido");
     }
+  } catch (error) {
+    alert(error);
+  }
+}
+
+async function carregarListaAlunos() {
+  try {
+    const response = await fetch("alunos.json");
+    const alunos = await response.json();
+    const listaAlunos = document.querySelector(".alunos ul");
+
+    alunos.forEach((aluno) => {
+      listaAlunos.innerHTML += `
+          <li>${aluno.nome}</li>
+        `;
+    });
   } catch (error) {
     alert(error);
   }
