@@ -15,10 +15,14 @@ let serie = document.getElementById("serie");
 let escola = document.getElementById("escola");
 let materia = document.getElementById("materia");
 
-let listaNotas = [];
+let listaMaterias = [
+  { nome: "Matemática", nota1: 7, nota2: 7, nota3: 7, nota4: 7 },
+  { nome: "Português", nota1: 7, nota2: 7, nota3: 7, nota4: 7 },
+  { nome: "Ciências", nota1: 7, nota2: 7, nota3: 7, nota4: 7 },
+];
 let listaAlunos = [];
 let medias = [];
-let mediaNotas = 0;
+let mediaMaterias = [];
 
 let botaoCep = document.querySelector("#viacep");
 if (botaoCep) {
@@ -37,20 +41,51 @@ if (botaoMaterias) {
 
 window.addEventListener("load", (event) => {
   if (window.location.pathname == "/home.html") {
-    const alunoJSON = localStorage.getItem("dadosAluno");
-    console.log(alunoJSON);
+    const materiasJSON = JSON.stringify(listaMaterias);
+    localStorage.setItem("materiasAluno", materiasJSON);
 
-    if (alunoJSON) {
-      const aluno = JSON.parse(alunoJSON);
+    carregarDadosAluno();
+    carregarMateriasAluno();
+    calcularMediaGeral(mediaMaterias);
 
-      nome.innerText = aluno.nome;
-      idade.innerText = aluno.idade;
-      serie.innerText = aluno.serie;
-      escola.innerText = aluno.escola;
-      materia.innerText = aluno.materia;
-    }
+    let maiorMedia = encontrarMaiorNumero(mediaMaterias);
+    document.querySelector("#maiorMedia").innerHTML = maiorMedia;
   }
 });
+
+function carregarDadosAluno() {
+  const alunoJSON = localStorage.getItem("dadosAluno");
+  console.log(alunoJSON);
+
+  if (alunoJSON) {
+    const aluno = JSON.parse(alunoJSON);
+
+    nome.innerText = aluno.nome;
+    idade.innerText = aluno.idade;
+    serie.innerText = aluno.serie;
+    escola.innerText = aluno.escola;
+    materia.innerText = aluno.materia;
+  }
+}
+
+function carregarMateriasAluno() {
+  const materiasJSON = localStorage.getItem("materiasAluno");
+
+  if (materiasJSON) {
+    const materias = JSON.parse(materiasJSON);
+
+    materias.forEach((materia) => {
+      let media = calcularMedia(
+        materia.nota1,
+        materia.nota2,
+        materia.nota3,
+        materia.nota4
+      );
+      mediaMaterias.push(media);
+      adicionarLinhaMateria(materia, media);
+    });
+  }
+}
 
 function gravarDadosAluno(event) {
   event.preventDefault();
@@ -106,16 +141,18 @@ function gravarDadosAluno(event) {
   window.location.href = "http://127.0.0.1:5500/home.html";
 }
 
-function calcularMedia(notas) {
-  let soma = 0;
-  for (let i = 0; i < notas.length; i++) {
-    soma += notas[i];
-  }
-  let media = soma / notas.length;
-  return media;
+function calcularMedia(n1, n2, n3, n4) {
+  return (n1 + n2 + n3 + n4) / 4;
 }
 
-mediaNotas = calcularMedia(listaNotas);
+function calcularMediaGeral(medias) {
+  let soma = 0;
+  medias.forEach((item) => {
+    soma += item;
+  });
+
+  document.querySelector("#mediaGeral").innerText = soma / medias.length;
+}
 
 function resultadoFinal(media) {
   return media >= 7
@@ -137,29 +174,34 @@ function tabuada(numero) {
 }
 
 function adicionarMateria() {
-  let materia = window.prompt("Qual o nome da matéria?");
-  let notas = [];
-  let i = 0;
-  while (i < 4) {
-    let nota = parseFloat(window.prompt("Informe a nota " + (i + 1) + ":"));
-    notas.push(nota);
-    i++;
-  }
-
-  let dadosMateria = {
-    nomeMateria: materia,
-    notas: notas,
+  let novaMateria = {
+    nome: "",
+    nota1: 0,
+    nota2: 0,
+    nota3: 0,
+    nota4: 0,
   };
 
-  let media = calcularMedia(dadosMateria.notas);
-  medias.push(media);
+  novaMateria.nome = window.prompt("Qual o nome da matéria?");
+  novaMateria.nota1 = parseFloat(window.prompt("Informe a nota1:"));
+  novaMateria.nota2 = parseFloat(window.prompt("Informe a nota2:"));
+  novaMateria.nota3 = parseFloat(window.prompt("Informe a nota3:"));
+  novaMateria.nota4 = parseFloat(window.prompt("Informe a nota4:"));
 
-  adicionarLinhaMateria(dadosMateria, media);
+  listaMaterias.push(novaMateria);
 
-  let mediaGeral = calcularMedia(medias);
-  document.querySelector("#mediaGeral").innerText = mediaGeral;
+  let media = calcularMedia(
+    novaMateria.nota1,
+    novaMateria.nota2,
+    novaMateria.nota3,
+    novaMateria.nota4
+  );
+  mediaMaterias.push(media);
+  adicionarLinhaMateria(novaMateria, media);
 
-  let maiorMedia = encontrarMaiorNumero(medias);
+  calcularMediaGeral(mediaMaterias);
+
+  let maiorMedia = encontrarMaiorNumero(mediaMaterias);
   document.querySelector("#maiorMedia").innerHTML = maiorMedia;
 }
 
@@ -179,11 +221,11 @@ function adicionarLinhaMateria(dadosMateria, media) {
   let tbody = document.querySelector("#tabelaMaterias tbody");
   tbody.innerHTML += `
     <tr>
-      <td>${dadosMateria.nomeMateria}</td>
-      <td>${dadosMateria.notas[0]}</td>
-      <td>${dadosMateria.notas[1]}</td>
-      <td>${dadosMateria.notas[2]}</td>
-      <td>${dadosMateria.notas[3]}</td>
+      <td>${dadosMateria.nome}</td>
+      <td>${dadosMateria.nota1}</td>
+      <td>${dadosMateria.nota2}</td>
+      <td>${dadosMateria.nota3}</td>
+      <td>${dadosMateria.nota4}</td>
       <td>${media}</td>
     <tr>
   `;
